@@ -6,6 +6,3282 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Valkiria Bikes — Forjado para Rodar</title>
     <link rel="icon" type="image/png" href="logo3.png">
+    <link rel="apple-touch-icon" href="logo3.png">
+    <link rel="apple-touch-icon-precomposed" href="logo3.png">
+    <meta name="apple-mobile-web-app-title" content="Valkiria Bikes">
+    <meta name="application-name" content="Valkiria Bikes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap');
+        /* === VARIABLES === */
+        
+         :root {
+            --bg-primary: #0e0d0b;
+            --bg-secondary: #161410;
+            --bg-card: #1e1b16;
+            --bg-elevated: #252018;
+            --gold: #c4a96b;
+            --gold-dim: #8a7045;
+            --gold-light: #dfc28a;
+            --crimson: #8b2e2e;
+            --crimson-dim: rgba(139, 46, 46, 0.15);
+            --white: #faf8f4;
+            --off-white: #e8e2d6;
+            --muted: #9a9080;
+            --muted-light: #b8ae9e;
+            --border: rgba(255, 248, 235, 0.07);
+            --border-gold: rgba(196, 169, 107, 0.25);
+            --border-hover: rgba(196, 169, 107, 0.5);
+            --t: 0.35s ease;
+            --radius: 4px;
+        }
+        /* === RESET === */
+        
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--off-white);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        button {
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        ul {
+            list-style: none;
+        }
+        /* === LOADING === */
+        
+        #loading {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        
+        #loading.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        
+        .loading-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 60px;
+            color: var(--gold);
+            letter-spacing: 0.25em;
+            animation: loadIn 0.8s ease-out;
+        }
+        
+        .loading-logo::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 1px;
+            background: rgba(196, 169, 107, 0.4);
+            margin: 10px auto 0;
+        }
+        
+        .loading-sub {
+            font-size: 11px;
+            letter-spacing: 0.45em;
+            color: var(--muted);
+            text-transform: uppercase;
+            text-align: center;
+            margin-top: 4px;
+            animation: loadIn 0.8s ease-out 0.2s both;
+        }
+        
+        @keyframes loadIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* === NAV === */
+        
+        #nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 20px clamp(20px, 5vw, 48px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background var(--t), backdrop-filter var(--t), padding var(--t);
+        }
+        
+        #nav.scrolled {
+            background: rgba(14, 13, 11, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 12px clamp(20px, 5vw, 48px);
+            border-bottom: 1px solid rgba(196, 169, 107, 0.1);
+        }
+        
+        .nav-logo {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+        }
+        
+        .nav-logo-main {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 30px;
+            color: var(--white);
+            letter-spacing: 0.05em;
+        }
+        
+        .nav-logo-sub {
+            font-size: 9px;
+            letter-spacing: 0.35em;
+            color: var(--gold-dim);
+            text-transform: uppercase;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted-light);
+            position: relative;
+            padding-bottom: 4px;
+            transition: color var(--t);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width var(--t);
+        }
+        
+        .nav-links a:hover {
+            color: var(--white);
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        /* Cart button */
+        
+        #cart-btn {
+            background: none;
+            border: none;
+            position: relative;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--off-white);
+            transition: color var(--t);
+        }
+        
+        #cart-btn:hover {
+            color: var(--gold);
+        }
+        
+        .cart-svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        
+        #cart-count {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 17px;
+            height: 17px;
+            background: var(--gold);
+            border-radius: 50%;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0e0d0b;
+            opacity: 0;
+            transform: scale(0);
+            transition: opacity var(--t), transform var(--t);
+        }
+        
+        #cart-count.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        /* Hamburger */
+        
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hamburger span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: var(--off-white);
+            transition: transform var(--t), opacity var(--t);
+        }
+        
+        .hamburger.open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+        /* === MOBILE MENU === */
+        
+        #mobile-menu {
+            position: fixed;
+            inset: 0;
+            background: rgba(14, 13, 11, 0.98);
+            backdrop-filter: blur(24px);
+            z-index: 99;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            transform: translateX(100%);
+            transition: transform 0.45s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        
+        #mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        #mobile-menu a {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 48px;
+            letter-spacing: 0.08em;
+            color: var(--off-white);
+            transform: translateX(40px);
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease, color var(--t);
+            position: relative;
+        }
+        
+        #mobile-menu.open a {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        #mobile-menu.open a:nth-child(1) {
+            transition-delay: 0.06s;
+        }
+        
+        #mobile-menu.open a:nth-child(2) {
+            transition-delay: 0.12s;
+        }
+        
+        #mobile-menu.open a:nth-child(3) {
+            transition-delay: 0.18s;
+        }
+        
+        #mobile-menu.open a:nth-child(4) {
+            transition-delay: 0.24s;
+        }
+        
+        #mobile-menu.open a:nth-child(5) {
+            transition-delay: 0.30s;
+        }
+        
+        #mobile-menu.open a:nth-child(6) {
+            transition-delay: 0.36s;
+        }
+        
+        #mobile-menu a:hover {
+            color: var(--gold);
+        }
+        
+        #mobile-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: width var(--t);
+        }
+        
+        #mobile-menu a:hover::after {
+            width: 40px;
+        }
+        /* === HERO === */
+        
+        #hero {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        
+        .hero-bg {
+            position: absolute;
+            inset: -30px;
+            background: radial-gradient(ellipse at 20% 50%, rgba(196, 169, 107, 0.06) 0%, transparent 55%), radial-gradient(ellipse at 80% 20%, rgba(139, 46, 46, 0.05) 0%, transparent 48%), radial-gradient(ellipse at 50% 90%, rgba(30, 27, 22, 0.8) 0%, transparent 60%), #0e0d0b;
+            will-change: transform;
+        }
+        
+        .hero-gear {
+            position: absolute;
+            right: -80px;
+            top: 50%;
+            width: 580px;
+            height: 580px;
+            opacity: 0.03;
+            animation: gearSpin 220s linear infinite;
+            pointer-events: none;
+            transform: translateY(-50%);
+        }
+        
+        .hero-gear-sm {
+            position: absolute;
+            left: -70px;
+            bottom: 8%;
+            width: 320px;
+            height: 320px;
+            opacity: 0.02;
+            animation: gearSpinRev 160s linear infinite;
+            pointer-events: none;
+        }
+        
+        .gear-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: repeating-conic-gradient( from 0deg at center, rgba(250, 248, 244, 1) 0deg 7deg, transparent 7deg 27deg);
+            mask: radial-gradient(circle, transparent 26%, black 26%, black 43%, transparent 43%, transparent 47%, black 47%, black 49.5%, transparent 49.5%);
+            -webkit-mask: radial-gradient(circle, transparent 26%, black 26%, black 43%, transparent 43%, transparent 47%, black 47%, black 49.5%, transparent 49.5%);
+        }
+        
+        .gear-hub {
+            position: absolute;
+            inset: 44%;
+            border-radius: 50%;
+            background: rgba(250, 248, 244, 1);
+        }
+        
+        @keyframes gearSpin {
+            from {
+                transform: translateY(-50%) rotate(0deg);
+            }
+            to {
+                transform: translateY(-50%) rotate(360deg);
+            }
+        }
+        
+        @keyframes gearSpinRev {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(-360deg);
+            }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 960px;
+            padding: 0 clamp(20px, 5vw, 40px);
+            text-align: center;
+        }
+        
+        .hero-tag {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.5s forwards;
+        }
+        
+        .hero-tag::before {
+            content: '';
+            display: inline-block;
+            width: 32px;
+            height: 1px;
+            background: var(--gold-dim);
+        }
+        
+        .hero-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(64px, 10vw, 140px);
+            line-height: 0.82;
+            color: var(--white);
+            letter-spacing: 0.02em;
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.7s forwards;
+        }
+        
+        .hero-title .accent {
+            color: var(--gold);
+        }
+        
+        .hero-sub {
+            font-size: clamp(13px, 1.6vw, 16px);
+            color: var(--off-white);
+            max-width: 480px;
+            margin: 0 auto 44px;
+            font-weight: 400;
+            line-height: 1.9;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.9s forwards;
+        }
+        
+        .hero-ctas {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 1.1s forwards;
+        }
+        
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .btn-primary {
+            padding: 15px 40px;
+            background: var(--gold);
+            color: #0e0d0b;
+            border: none;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            cursor: pointer;
+            min-height: 48px;
+            transition: background var(--t), box-shadow var(--t);
+        }
+        
+        .btn-primary:hover {
+            background: var(--gold-light);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(196, 169, 107, 0.3);
+        }
+        
+        .btn-outline {
+            padding: 15px 40px;
+            background: transparent;
+            color: var(--off-white);
+            border: 1px solid rgba(250, 248, 244, 0.2);
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            cursor: pointer;
+            min-height: 48px;
+            transition: border-color var(--t), color var(--t);
+        }
+        
+        .btn-outline:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        
+        .hero-scroll {
+            position: absolute;
+            bottom: 36px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 1.4s forwards;
+        }
+        
+        .hero-scroll-label {
+            font-size: 10px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+        
+        .scroll-chevron {
+            width: 18px;
+            height: 18px;
+            border-right: 2px solid var(--muted);
+            border-bottom: 2px solid var(--muted);
+            transform: rotate(45deg);
+            animation: bounce 1.6s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+            0%,
+            100% {
+                transform: rotate(45deg) translateY(0);
+            }
+            50% {
+                transform: rotate(45deg) translateY(5px);
+            }
+        }
+        /* === SECTION COMMONS === */
+        
+        .section-tag {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            margin-bottom: 12px;
+        }
+        
+        .section-tag::before {
+            content: '';
+            flex-shrink: 0;
+            width: 32px;
+            height: 1px;
+            background: var(--gold-dim);
+        }
+        
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(42px, 6vw, 84px);
+            color: var(--white);
+            letter-spacing: 0.02em;
+            line-height: 0.9;
+        }
+        
+        .section-header {
+            text-align: left;
+            margin-bottom: 56px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        /* === CATEGORIES === */
+        
+        #categories {
+            padding: 100px clamp(20px, 5vw, 48px);
+            background: linear-gradient(to bottom, var(--bg-secondary) 0%, var(--bg-secondary) 96%, var(--bg-primary) 100%);
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .cat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 48px 32px;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: box-shadow var(--t), border-color var(--t);
+        }
+        
+        .cat-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(196, 169, 107, 0.06) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity var(--t);
+        }
+        
+        .cat-card::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--gold);
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform var(--t);
+        }
+        
+        .cat-card:hover {
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+            border-color: var(--border-gold);
+        }
+        
+        .cat-card:hover::before {
+            opacity: 1;
+        }
+        
+        .cat-card:hover::after {
+            transform: scaleY(1);
+        }
+        
+        .cat-num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 90px;
+            color: rgba(250, 248, 244, 0.03);
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            line-height: 1;
+            pointer-events: none;
+        }
+        
+        .cat-icon {
+            width: 52px;
+            height: 52px;
+            margin-bottom: 20px;
+            background: rgba(196, 169, 107, 0.07);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            flex-shrink: 0;
+        }
+        
+        .cat-icon-elec {
+            color: #c87070;
+            background: rgba(139, 46, 46, 0.08);
+        }
+        
+        .cat-body {
+            flex: 1;
+        }
+        
+        .cat-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            letter-spacing: 0.04em;
+            color: var(--white);
+            margin-bottom: 10px;
+        }
+        
+        .cat-desc {
+            font-size: 13px;
+            color: var(--muted-light);
+            margin-bottom: 24px;
+            line-height: 1.75;
+        }
+        
+        .cat-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--gold);
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity var(--t), transform var(--t);
+        }
+        
+        .cat-cta-elec {
+            color: #c87070;
+        }
+        
+        .cat-card:hover .cat-cta {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* === BIKES === */
+        
+        #bikes {
+            padding: 100px 0;
+            background: linear-gradient(to bottom, var(--bg-primary) 0%, var(--bg-primary) 96%, var(--bg-secondary) 100%);
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        
+        .bikes-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 24px;
+            padding: 0 clamp(20px, 5vw, 48px) 48px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .filter-tabs {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tab {
+            padding: 8px 18px;
+            min-height: 38px;
+            background: rgba(255, 248, 235, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all var(--t);
+        }
+        
+        .filter-tab:hover,
+        .filter-tab.active {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: #0e0d0b;
+        }
+        
+        .carousel-track {
+            display: flex;
+            gap: 20px;
+            padding: 8px clamp(20px, 5vw, 48px) 24px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            cursor: grab;
+        }
+        
+        .carousel-track::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .carousel-track.dragging {
+            cursor: grabbing;
+            user-select: none;
+        }
+        /* Product cards */
+        
+        .product-card {
+            min-width: 300px;
+            max-width: 300px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            position: relative;
+            transition: box-shadow var(--t), border-color var(--t);
+            scroll-snap-align: start;
+            flex-shrink: 0;
+        }
+        
+        .product-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.35s ease;
+            border-radius: var(--radius) var(--radius) 0 0;
+            z-index: 2;
+        }
+        
+        .product-card:hover {
+            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(196, 169, 107, 0.08);
+            border-color: var(--border-gold);
+        }
+        
+        .product-card:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .product-img {
+            height: 240px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+        
+        .product-img::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.04);
+            clip-path: polygon(40% 0%, 100% 0%, 62% 100%, 0% 100%);
+        }
+        
+        .product-img::after {
+            content: '';
+            position: absolute;
+            z-index: 0;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        /* Bike gradients — warm editorial */
+        
+        .bv1 {
+            background: linear-gradient(145deg, #100e0a 0%, #1e1b14 100%);
+        }
+        
+        .bv2 {
+            background: linear-gradient(145deg, #0c1008 0%, #141a0e 100%);
+        }
+        
+        .bv3 {
+            background: linear-gradient(145deg, #100a0a 0%, #1e1010 100%);
+        }
+        
+        .bv4 {
+            background: linear-gradient(145deg, #0e0c08 0%, #1c1a10 100%);
+        }
+        
+        .bv5 {
+            background: linear-gradient(145deg, #0a0e0c 0%, #121a14 100%);
+        }
+        
+        .bv6 {
+            background: linear-gradient(145deg, #0e0a10 0%, #1a1020 100%);
+        }
+        /* Gear gradients — warm editorial */
+        
+        .gv1 {
+            background: linear-gradient(145deg, #12100c 0%, #201e16 100%);
+        }
+        
+        .gv2 {
+            background: linear-gradient(145deg, #0e0c10 0%, #1c1820 100%);
+        }
+        
+        .gv3 {
+            background: linear-gradient(145deg, #100c0a 0%, #1e1612 100%);
+        }
+        
+        .gv4 {
+            background: linear-gradient(145deg, #0e0c0a 0%, #1c1810 100%);
+        }
+        
+        .gv5 {
+            background: linear-gradient(145deg, #0c100a 0%, #18180e 100%);
+        }
+        
+        .gv6 {
+            background: linear-gradient(145deg, #100e0c 0%, #1e1a14 100%);
+        }
+        
+        .gv7 {
+            background: linear-gradient(145deg, #0a0e10 0%, #121820 100%);
+        }
+        
+        .gv8 {
+            background: linear-gradient(145deg, #100c0e 0%, #1e141a 100%);
+        }
+        /* Bike art wheels */
+        
+        .bike-art {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .bike-art::before {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            left: 24px;
+            bottom: 24px;
+        }
+        
+        .bike-art::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            right: 24px;
+            bottom: 24px;
+        }
+        
+        .bike-glow {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            filter: blur(36px);
+            opacity: 0.32;
+            z-index: 3;
+            position: relative;
+        }
+        /* Gear letter faint bg */
+        
+        .gear-letter {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 90px;
+            color: rgba(255, 255, 255, 0.055);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            letter-spacing: 0.05em;
+            pointer-events: none;
+            z-index: 2;
+            user-select: none;
+        }
+        
+        .product-img-label {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 3;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.65);
+            padding: 3px 9px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        
+        .wishlist-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 3;
+            width: 32px;
+            height: 32px;
+            background: rgba(0, 0, 0, 0.45);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.6);
+            transition: background var(--t), transform var(--t), color var(--t);
+        }
+        
+        .wishlist-btn:hover {
+            background: rgba(255, 255, 255, 0.14);
+            transform: scale(1.1);
+        }
+        
+        .wishlist-btn.wishlisted {
+            color: #c87070;
+        }
+        
+        .wishlist-btn.wishlisted svg path {
+            fill: #c87070;
+        }
+        
+        .product-info {
+            padding: 20px;
+        }
+        
+        .product-name {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--white);
+            margin-bottom: 4px;
+        }
+        
+        .product-cat-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            background: rgba(196, 169, 107, 0.08);
+            border: 1px solid rgba(196, 169, 107, 0.15);
+            border-radius: 3px;
+            display: inline-block;
+            padding: 2px 9px;
+            margin-bottom: 14px;
+        }
+        
+        .product-price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 16px;
+            margin-top: 10px;
+        }
+        
+        .price-bs {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--white);
+        }
+        
+        .price-usd {
+            font-size: 13px;
+            color: var(--muted);
+        }
+        
+        .btn-cart {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: var(--off-white);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            cursor: pointer;
+            min-height: 44px;
+            transition: background var(--t), border-color var(--t), color var(--t);
+        }
+        
+        .btn-cart:hover {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: #0e0d0b;
+        }
+        
+        .btn-cart:active {
+            transform: scale(0.98);
+        }
+        /* === GEAR === */
+        
+        #gear {
+            padding: 100px clamp(20px, 5vw, 48px);
+            background: linear-gradient(to bottom, var(--bg-secondary) 0%, var(--bg-secondary) 96%, var(--bg-primary) 100%);
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        
+        .gear-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .gear-grid .product-card {
+            min-width: unset;
+            max-width: unset;
+        }
+        /* === SUPPLEMENTS === */
+        
+        #supplements {
+            padding: 100px clamp(20px, 5vw, 48px);
+            background: linear-gradient(160deg, #0e0d0b 0%, #130808 60%, #0e0d0b 100%);
+            position: relative;
+            overflow: hidden;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        
+        #supplements::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 30%, rgba(139, 46, 46, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        
+        .supp-elec-blob {
+            position: absolute;
+            top: 50%;
+            left: -240px;
+            width: 700px;
+            height: 700px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(139, 46, 46, 0.06) 0%, transparent 70%);
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+        
+        .supp-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .supp-card {
+            background: rgba(139, 46, 46, 0.04);
+            border: 1px solid rgba(139, 46, 46, 0.12);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: border-color var(--t), box-shadow var(--t);
+        }
+        
+        .supp-card:hover {
+            border-color: rgba(139, 46, 46, 0.35);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.55), 0 1px 0 rgba(139, 46, 46, 0.2);
+        }
+        
+        .supp-img {
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .sv1 {
+            background: linear-gradient(145deg, #140808 0%, #2a1010 100%);
+        }
+        
+        .sv2 {
+            background: linear-gradient(145deg, #100a0a 0%, #220c0c 100%);
+        }
+        
+        .sv3 {
+            background: linear-gradient(145deg, #0e0808 0%, #1e0e0e 100%);
+        }
+        
+        .sv4 {
+            background: linear-gradient(145deg, #120808 0%, #281010 100%);
+        }
+        
+        .supp-glow {
+            position: absolute;
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: rgba(139, 46, 46, 0.5);
+            filter: blur(55px);
+            opacity: 0.2;
+        }
+        
+        .supp-can {
+            width: 52px;
+            height: 76px;
+            position: relative;
+            z-index: 1;
+            border: 2px solid rgba(139, 46, 46, 0.4);
+            border-radius: 8px 8px 5px 5px;
+        }
+        
+        .supp-can::before {
+            content: '';
+            position: absolute;
+            top: -9px;
+            left: 9px;
+            right: 9px;
+            height: 9px;
+            background: rgba(139, 46, 46, 0.3);
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .supp-can::after {
+            content: '';
+            position: absolute;
+            inset: 28% 18%;
+            background: rgba(139, 46, 46, 0.08);
+            border-radius: 2px;
+            border: 1px solid rgba(139, 46, 46, 0.2);
+        }
+        
+        .supp-info {
+            padding: 20px;
+        }
+        
+        .supp-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        
+        .supp-tag {
+            padding: 3px 9px;
+            background: rgba(139, 46, 46, 0.1);
+            border: 1px solid rgba(139, 46, 46, 0.2);
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #c87070;
+        }
+        
+        .supp-name {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 4px;
+        }
+        
+        .supp-desc {
+            font-size: 12px;
+            color: var(--muted-light);
+            margin-bottom: 14px;
+            line-height: 1.7;
+        }
+        
+        .btn-cart-elec {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: #c87070;
+            border: 1px solid rgba(139, 46, 46, 0.3);
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            cursor: pointer;
+            min-height: 44px;
+            transition: background var(--t), border-color var(--t), color var(--t);
+        }
+        
+        .btn-cart-elec:hover {
+            background: var(--crimson);
+            border-color: var(--crimson);
+            color: var(--white);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+        /* === WHY === */
+        
+        #why {
+            padding: 100px clamp(20px, 5vw, 48px);
+            background: linear-gradient(to bottom, var(--bg-secondary) 0%, var(--bg-secondary) 96%, var(--bg-primary) 100%);
+            position: relative;
+            overflow: hidden;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        
+        #why::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 60%, rgba(196, 169, 107, 0.05) 0%, transparent 65%);
+            pointer-events: none;
+        }
+        
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .why-card {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .why-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 24px;
+            background: rgba(196, 169, 107, 0.07);
+            border: 1px solid rgba(196, 169, 107, 0.12);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+        }
+        
+        .why-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 20px;
+            letter-spacing: 0.1em;
+            color: var(--white);
+            margin-bottom: 12px;
+        }
+        
+        .why-desc {
+            font-size: 13px;
+            color: var(--muted-light);
+            line-height: 1.85;
+        }
+        /* === TESTIMONIALS === */
+        
+        #testimonials {
+            padding: 100px 0;
+            background: var(--bg-primary);
+            overflow: hidden;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        
+        .testi-header {
+            padding: 0 clamp(20px, 5vw, 48px);
+            margin-bottom: 48px;
+            text-align: left;
+        }
+        
+        .testi-track {
+            display: flex;
+            gap: 20px;
+            padding: 8px clamp(20px, 5vw, 48px) 24px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            scroll-behavior: smooth;
+        }
+        
+        .testi-track::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .testi-card {
+            min-width: 350px;
+            max-width: 350px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            flex-shrink: 0;
+            transition: border-color var(--t);
+        }
+        
+        .testi-card:hover {
+            border-color: var(--border-gold);
+        }
+        
+        .testi-stars {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 16px;
+            color: var(--gold);
+        }
+        
+        .testi-star {
+            display: block;
+        }
+        
+        .testi-quote {
+            font-size: 14px;
+            color: var(--off-white);
+            line-height: 1.85;
+            margin-bottom: 22px;
+            font-style: italic;
+            opacity: 0.85;
+        }
+        
+        .testi-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .testi-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(196, 169, 107, 0.08);
+            border: 1px solid rgba(196, 169, 107, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 20px;
+            color: var(--gold);
+            flex-shrink: 0;
+        }
+        
+        .testi-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--white);
+        }
+        
+        .testi-city {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+        
+        .testi-prod {
+            display: inline-block;
+            margin-top: 5px;
+            padding: 2px 9px;
+            background: rgba(196, 169, 107, 0.08);
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            color: var(--gold-dim);
+        }
+        /* === NEWSLETTER === */
+        
+        #newsletter {
+            padding: 100px clamp(20px, 5vw, 48px);
+            background: linear-gradient(160deg, #161410 0%, #1e1b16 50%, #0e0d0b 100%);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        
+        #newsletter::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 15% 50%, rgba(196, 169, 107, 0.08) 0%, transparent 52%), radial-gradient(ellipse at 85% 50%, rgba(139, 46, 46, 0.05) 0%, transparent 52%);
+            pointer-events: none;
+        }
+        
+        .newsletter-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 580px;
+            margin: 0 auto;
+        }
+        
+        .newsletter-tag {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+        }
+        
+        .newsletter-tag::before {
+            content: '';
+            display: inline-block;
+            width: 32px;
+            height: 1px;
+            background: var(--gold-dim);
+        }
+        
+        .newsletter-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(52px, 8vw, 100px);
+            color: var(--white);
+            letter-spacing: 0.02em;
+            line-height: 0.88;
+            margin-bottom: 16px;
+        }
+        
+        .newsletter-incentive {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 44px;
+        }
+        
+        .newsletter-incentive strong {
+            color: var(--gold);
+            font-weight: 700;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            gap: 12px;
+            max-width: 460px;
+            margin: 0 auto;
+        }
+        
+        .newsletter-input {
+            flex: 1;
+            padding: 16px 20px;
+            min-height: 48px;
+            background: rgba(250, 248, 244, 0.04);
+            border: 1px solid rgba(250, 248, 244, 0.1);
+            border-radius: 3px;
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border-color var(--t), background var(--t);
+        }
+        
+        .newsletter-input:focus {
+            border-color: var(--gold);
+            background: rgba(250, 248, 244, 0.07);
+        }
+        
+        .newsletter-input::placeholder {
+            color: var(--muted);
+        }
+        
+        .newsletter-input.err {
+            border-color: #c87070;
+        }
+        
+        .btn-sub {
+            padding: 15px 28px;
+            min-height: 48px;
+            white-space: nowrap;
+            background: var(--gold);
+            color: #0e0d0b;
+            border: none;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background var(--t), box-shadow var(--t);
+        }
+        
+        .btn-sub:hover {
+            background: var(--gold-light);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+        
+        .newsletter-ok {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 18px;
+            background: rgba(196, 169, 107, 0.08);
+            border: 1px solid rgba(196, 169, 107, 0.25);
+            border-radius: 4px;
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .newsletter-ok.show {
+            display: flex;
+        }
+        /* === FOOTER === */
+        
+        footer {
+            background: var(--bg-secondary);
+            padding: 80px clamp(20px, 5vw, 48px) 40px;
+            border-top: 1px solid rgba(196, 169, 107, 0.08);
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr 1fr 1fr;
+            gap: 48px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-bottom: 48px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .footer-brand-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 36px;
+            color: var(--white);
+            letter-spacing: 0.05em;
+        }
+        
+        .footer-brand-sub {
+            font-size: 9px;
+            letter-spacing: 0.3em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+        
+        .footer-tagline {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.75;
+            max-width: 230px;
+        }
+        
+        .footer-col-head {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .footer-links a {
+            font-size: 13px;
+            color: var(--muted);
+            transition: color var(--t), transform var(--t);
+            display: inline-block;
+        }
+        
+        .footer-links a:hover {
+            color: var(--gold);
+            transform: translateX(4px);
+        }
+        
+        .social-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .social-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--muted);
+            cursor: pointer;
+            transition: color var(--t);
+        }
+        
+        .social-item:hover {
+            color: var(--gold);
+        }
+        
+        .social-icon-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background var(--t), border-color var(--t);
+        }
+        
+        .social-item:hover .social-icon-box {
+            background: rgba(196, 169, 107, 0.1);
+            border-color: rgba(196, 169, 107, 0.3);
+        }
+        
+        .contact-item {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 10px;
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+        }
+        
+        .contact-item svg {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .footer-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .footer-copy {
+            font-size: 12px;
+            color: var(--muted);
+        }
+        /* Back to top — fixed */
+        
+        #back-to-top {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 44px;
+            height: 44px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--muted);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: opacity var(--t), visibility var(--t), transform var(--t), background var(--t), color var(--t), border-color var(--t);
+            z-index: 50;
+        }
+        
+        #back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        #back-to-top:hover {
+            background: var(--gold);
+            color: #0e0d0b;
+            border-color: var(--gold);
+        }
+        /* === CART SIDEBAR === */
+        
+        #cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 400px;
+            background: var(--bg-elevated);
+            border-left: 1px solid var(--border);
+            z-index: 200;
+            transform: translateX(100%);
+            transition: transform 0.42s cubic-bezier(0.77, 0, 0.175, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #cart-sidebar.open {
+            transform: translateX(0);
+        }
+        
+        .cart-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 199;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--t), visibility var(--t);
+        }
+        
+        .cart-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .cart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .cart-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 24px;
+            letter-spacing: 0.12em;
+            color: var(--white);
+        }
+        
+        .cart-close {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            border-radius: 4px;
+            color: var(--muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background var(--t), color var(--t);
+        }
+        
+        .cart-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+        
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+        }
+        
+        .cart-empty {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+        
+        .cart-empty svg {
+            opacity: 0.3;
+        }
+        
+        .cart-item {
+            display: flex;
+            gap: 12px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .cart-item-vis {
+            width: 60px;
+            height: 60px;
+            border-radius: 6px;
+            flex-shrink: 0;
+            background: var(--bg-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 24px;
+            color: var(--gold);
+        }
+        
+        .cart-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .cart-item-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .cart-item-price {
+            font-size: 13px;
+            color: var(--gold);
+            font-weight: 600;
+        }
+        
+        .cart-item-qty {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .qty-btn {
+            width: 28px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--muted);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background var(--t), border-color var(--t), color var(--t);
+        }
+        
+        .qty-btn:hover {
+            background: rgba(196, 169, 107, 0.1);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        
+        .qty-num {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--white);
+            min-width: 22px;
+            text-align: center;
+        }
+        
+        .cart-item-remove {
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            padding: 4px;
+            align-self: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color var(--t);
+        }
+        
+        .cart-item-remove:hover {
+            color: #c87070;
+        }
+        
+        .cart-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .cart-subtotal {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .subtotal-label {
+            font-size: 13px;
+            color: var(--muted);
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        
+        .subtotal-val {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--white);
+        }
+        
+        .btn-checkout {
+            width: 100%;
+            padding: 16px;
+            background: var(--gold);
+            color: #0e0d0b;
+            border: none;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            cursor: pointer;
+            min-height: 48px;
+            transition: background var(--t), box-shadow var(--t);
+        }
+        
+        .btn-checkout:hover {
+            background: var(--gold-light);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+        /* === MODAL === */
+        
+        .modal-bg {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--t), visibility var(--t);
+        }
+        
+        .modal-bg.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border-gold);
+            border-radius: var(--radius);
+            padding: 44px;
+            max-width: 460px;
+            width: 100%;
+            text-align: center;
+            transform: scale(0.94);
+            transition: transform var(--t);
+        }
+        
+        .modal-bg.show .modal {
+            transform: scale(1);
+        }
+        
+        .modal-icon {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .modal-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 34px;
+            letter-spacing: 0.08em;
+            color: var(--white);
+            margin-bottom: 12px;
+        }
+        
+        .modal-text {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 28px;
+            line-height: 1.75;
+        }
+        
+        .btn-modal {
+            padding: 14px 44px;
+            background: var(--gold);
+            color: #0e0d0b;
+            border: none;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background var(--t), box-shadow var(--t);
+        }
+        
+        .btn-modal:hover {
+            background: var(--gold-light);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+        /* === SCROLL REVEAL === */
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .reveal-d1 {
+            transition-delay: 0.1s;
+        }
+        
+        .reveal-d2 {
+            transition-delay: 0.2s;
+        }
+        
+        .reveal-d3 {
+            transition-delay: 0.3s;
+        }
+        
+        .reveal-d4 {
+            transition-delay: 0.4s;
+        }
+        /* === RESPONSIVE === */
+        
+        @media (max-width: 1280px) {
+            .gear-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .supp-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 36px;
+            }
+        }
+        
+        @media (max-width: 1024px) {
+            .categories-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .gear-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .why-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .nav-links {
+                display: none;
+            }
+            .hamburger {
+                display: flex;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .categories-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .why-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 24px;
+            }
+            .supp-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 32px;
+            }
+            #cart-sidebar {
+                width: 100%;
+            }
+            .newsletter-form {
+                flex-direction: column;
+            }
+            .btn-sub {
+                width: 100%;
+            }
+            .bikes-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .product-card {
+                min-width: 260px;
+                max-width: 260px;
+            }
+            .testi-card {
+                min-width: 290px;
+                max-width: 290px;
+            }
+            .hero-ctas {
+                flex-direction: column;
+                align-items: center;
+            }
+            .hero-ctas .btn-primary,
+            .hero-ctas .btn-outline {
+                width: min(280px, 100%);
+            }
+            .hero-gear {
+                width: 360px;
+                height: 360px;
+                right: -70px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .why-grid {
+                grid-template-columns: 1fr;
+            }
+            .supp-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            .filter-tabs {
+                gap: 4px;
+            }
+            .filter-tab {
+                padding: 7px 14px;
+                font-size: 10px;
+            }
+            .product-card {
+                min-width: 240px;
+                max-width: 240px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ======= LOADING ======= -->
+    <div id="loading">
+        <div>
+            <div class="loading-logo">VALKIRIA</div>
+            <div class="loading-sub">Bikes</div>
+        </div>
+    </div>
+
+    <!-- ======= NAV ======= -->
+    <nav id="nav">
+        <a href="#" class="nav-logo">
+            <img src="logo.png" alt="Valkiria Bikes" style="height:48px; width:auto; display:block;">
+        </a>
+        <ul class="nav-links">
+            <li><a href="#">Inicio</a></li>
+            <li><a href="#bikes">Bicicletas</a></li>
+            <li><a href="#gear">Equipamiento</a></li>
+            <li><a href="#supplements">Suplementos</a></li>
+            <li><a href="#why">Nosotros</a></li>
+            <li><a href="#newsletter">Contacto</a></li>
+        </ul>
+        <div class="nav-right">
+            <button id="cart-btn" aria-label="Abrir carrito">
+      <svg class="cart-svg" viewBox="0 0 24 24">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 01-8 0"/>
+      </svg>
+      <span id="cart-count">0</span>
+    </button>
+            <button class="hamburger" id="hamburger" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+        </div>
+    </nav>
+
+    <!-- ======= MOBILE MENU ======= -->
+    <div id="mobile-menu">
+        <a href="#">Inicio</a>
+        <a href="#bikes">Bicicletas</a>
+        <a href="#gear">Equipamiento</a>
+        <a href="#supplements">Suplementos</a>
+        <a href="#why">Nosotros</a>
+        <a href="#newsletter">Contacto</a>
+    </div>
+
+    <!-- ======= CART ======= -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <div id="cart-sidebar">
+        <div class="cart-header">
+            <span class="cart-title">TU CARRITO</span>
+            <button class="cart-close" id="cart-close" aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <div class="cart-empty">
+                <svg viewBox="0 0 48 48" width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 4L6 12v28a4 4 0 004 4h28a4 4 0 004-4V12l-6-8z"/>
+        <line x1="6" y1="12" x2="42" y2="12"/>
+        <path d="M32 20a8 8 0 01-16 0"/>
+      </svg>
+                <span>Tu carrito está vacío</span>
+            </div>
+        </div>
+        <div class="cart-footer" id="cart-footer" style="display:none">
+            <div class="cart-subtotal">
+                <span class="subtotal-label">Subtotal</span>
+                <span class="subtotal-val" id="cart-total">Bs. 0</span>
+            </div>
+            <button class="btn-checkout" id="checkout-btn">PROCEDER AL PAGO</button>
+        </div>
+    </div>
+
+    <!-- ======= MODAL ======= -->
+    <div class="modal-bg" id="checkout-modal">
+        <div class="modal">
+            <div class="modal-icon">
+                <svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="32" cy="32" r="28"/>
+        <polyline points="20,32 28,40 44,24"/>
+      </svg>
+            </div>
+            <div class="modal-title">¡PEDIDO RECIBIDO!</div>
+            <p class="modal-text">
+                ¡Gracias por tu compra! Nuestro equipo de Valkiria Bikes en Cochabamba se pondrá en contacto contigo a la brevedad para confirmar los detalles de entrega y pago.
+            </p>
+            <button class="btn-modal" id="modal-close">SEGUIR COMPRANDO</button>
+        </div>
+    </div>
+
+    <!-- ======= BACK TO TOP ======= -->
+    <button id="back-to-top" aria-label="Volver arriba">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+
+    <main>
+
+        <!-- ======= HERO ======= -->
+        <section id="hero">
+            <div class="hero-bg" id="hero-bg"></div>
+            <div class="hero-gear">
+                <div class="gear-ring"></div>
+                <div class="gear-hub"></div>
+            </div>
+            <div class="hero-gear-sm">
+                <div class="gear-ring"></div>
+            </div>
+            <div class="hero-content">
+                <p class="hero-tag">RENDIMIENTO BOLIVIANO</p>
+                <h1 class="hero-title">FORJADO<br>PARA<br><span class="accent">RODAR</span></h1>
+                <p class="hero-sub">Bicicletas. Equipamiento. Rendimiento. Todo lo que necesitas para dominar.</p>
+                <div class="hero-ctas">
+                    <a href="#bikes"><button class="btn-primary">VER BICICLETAS</button></a>
+                    <a href="#gear"><button class="btn-outline">EXPLORAR EQUIPAMIENTO</button></a>
+                </div>
+            </div>
+            <div class="hero-scroll">
+                <span class="hero-scroll-label">Deslizar</span>
+                <div class="scroll-chevron"></div>
+            </div>
+        </section>
+
+        <!-- ======= CATEGORIES ======= -->
+        <section id="categories">
+            <div class="container">
+                <div class="section-header reveal">
+                    <p class="section-tag">Nuestro Catálogo</p>
+                    <h2 class="section-title">DOMINA TODO</h2>
+                </div>
+                <div class="categories-grid">
+                    <div class="cat-card reveal reveal-d1">
+                        <span class="cat-num">01</span>
+                        <div>
+                            <div class="cat-icon">
+                                <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="8" cy="22" r="5"/><circle cx="24" cy="22" r="5"/>
+              <path d="M8 22L13 9h7"/><path d="M13 9l8 13"/><path d="M20 9h4"/>
+              <circle cx="20" cy="7" r="2"/>
+            </svg>
+                            </div>
+                            <div class="cat-body">
+                                <div class="cat-name">BICICLETAS</div>
+                                <p class="cat-desc">Máquinas de montaña, ruta, gravel y ciudad, construidas para el exigente terreno boliviano y la ambición de cada ciclista.</p>
+                            </div>
+                        </div>
+                        <a href="#bikes" class="cat-cta">EXPLORAR
+          <svg viewBox="0 0 20 20" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 10h12M12 6l4 4-4 4"/>
+          </svg>
+        </a>
+                    </div>
+                    <div class="cat-card reveal reveal-d2">
+                        <span class="cat-num">02</span>
+                        <div>
+                            <div class="cat-icon">
+                                <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 18C6 11.4 10.5 6 16 6s10 5.4 10 12"/>
+              <path d="M4 20h24"/><path d="M10 20v2a2 2 0 002 2h8a2 2 0 002-2v-2"/>
+            </svg>
+                            </div>
+                            <div class="cat-body">
+                                <div class="cat-name">EQUIPAMIENTO &amp; ACCESORIOS</div>
+                                <p class="cat-desc">Cascos, camisetas, guantes y todos los esenciales. Equípate con confianza, pedalea con propósito.</p>
+                            </div>
+                        </div>
+                        <a href="#gear" class="cat-cta">EXPLORAR
+          <svg viewBox="0 0 20 20" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 10h12M12 6l4 4-4 4"/>
+          </svg>
+        </a>
+                    </div>
+                    <div class="cat-card reveal reveal-d3">
+                        <span class="cat-num">03</span>
+                        <div>
+                            <div class="cat-icon cat-icon-elec">
+                                <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 4L8 18h8l-2 10L26 14h-8z"/>
+            </svg>
+                            </div>
+                            <div class="cat-body">
+                                <div class="cat-name">SUPLEMENTOS ENERGÉTICOS</div>
+                                <p class="cat-desc">Pre-entrenamiento, geles, electrolitos y recuperación. Potencia tu rodada de principio a fin con nutrición de élite.</p>
+                            </div>
+                        </div>
+                        <a href="#supplements" class="cat-cta cat-cta-elec">EXPLORAR
+          <svg viewBox="0 0 20 20" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 10h12M12 6l4 4-4 4"/>
+          </svg>
+        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======= BIKES ======= -->
+        <section id="bikes">
+            <div class="bikes-header">
+                <div>
+                    <p class="section-tag">Alto Rendimiento</p>
+                    <h2 class="section-title">LAS MÁQUINAS</h2>
+                </div>
+                <div class="filter-tabs" id="bike-filters">
+                    <button class="filter-tab active" data-filter="all">Todas</button>
+                    <button class="filter-tab" data-filter="mountain">Montaña</button>
+                    <button class="filter-tab" data-filter="road">Ruta</button>
+                    <button class="filter-tab" data-filter="urban">Urbana</button>
+                    <button class="filter-tab" data-filter="gravel">Gravel</button>
+                </div>
+            </div>
+            <div class="carousel-track" id="bikes-carousel"></div>
+        </section>
+
+        <!-- ======= GEAR ======= -->
+        <section id="gear">
+            <div class="container">
+                <div class="section-header reveal">
+                    <p class="section-tag">Equípate</p>
+                    <h2 class="section-title">EQUIPAMIENTO &amp; ACCESORIOS</h2>
+                </div>
+                <div class="gear-grid" id="gear-grid"></div>
+            </div>
+        </section>
+
+        <!-- ======= SUPPLEMENTS ======= -->
+        <section id="supplements">
+            <div class="supp-elec-blob"></div>
+            <div class="container" style="position:relative;z-index:1">
+                <div class="section-header reveal">
+                    <p class="section-tag">Combustible</p>
+                    <h2 class="section-title">POTENCIA TU RENDIMIENTO</h2>
+                </div>
+                <div class="supp-grid" id="supp-grid"></div>
+            </div>
+        </section>
+
+        <!-- ======= WHY ======= -->
+        <section id="why">
+            <div class="container">
+                <div class="section-header reveal">
+                    <p class="section-tag">Por Qué Valkiria</p>
+                    <h2 class="section-title">NUESTRA DIFERENCIA</h2>
+                </div>
+                <div class="why-grid">
+                    <div class="why-card reveal reveal-d1">
+                        <div class="why-icon">
+                            <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 4h16v10a8 8 0 01-16 0z"/>
+            <path d="M8 8H4a4 4 0 004 4"/><path d="M24 8h4a4 4 0 01-4 4"/>
+            <line x1="16" y1="22" x2="16" y2="28"/><line x1="10" y1="28" x2="22" y2="28"/>
+          </svg>
+                        </div>
+                        <h3 class="why-title">CONSTRUCCIÓN LEGENDARIA</h3>
+                        <p class="why-desc">Cuadros fabricados con tolerancias de precisión. Cada soldadura, cada componente seleccionado para el máximo rendimiento.</p>
+                    </div>
+                    <div class="why-card reveal reveal-d2">
+                        <div class="why-icon">
+                            <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 28L14 6l12 22z"/><path d="M20 28l6-10 6 10"/>
+          </svg>
+                        </div>
+                        <h3 class="why-title">PROBADO EN RUTA BOLIVIANA</h3>
+                        <p class="why-desc">Diseñado y probado en el terreno de alta altitud de Cochabamba. Si funciona aquí, funciona en cualquier lugar.</p>
+                    </div>
+                    <div class="why-card reveal reveal-d3">
+                        <div class="why-icon">
+                            <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="20" cy="5" r="3"/>
+            <path d="M12 10l5 4-3 9"/><path d="M17 14l5 7"/><path d="M14 19l-4 7"/><path d="M22 21l4 5"/>
+          </svg>
+                        </div>
+                        <h3 class="why-title">ATLETA COMPLETO</h3>
+                        <p class="why-desc">Desde la bici bajo tus pies hasta la nutrición dentro de ti — Valkiria cubre cada aspecto de tu rendimiento ciclista.</p>
+                    </div>
+                    <div class="why-card reveal reveal-d4">
+                        <div class="why-icon">
+                            <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="9" r="4"/><circle cx="22" cy="9" r="4"/>
+            <path d="M4 28a8 8 0 0114 0"/><path d="M18 28a8 8 0 0110-7"/>
+          </svg>
+                        </div>
+                        <h3 class="why-title">COMUNIDAD APASIONADA</h3>
+                        <p class="why-desc">Únete a la tribu Valkiria. Rodadas grupales, competencias, eventos sociales — pedaleamos juntos, crecemos juntos.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======= TESTIMONIALS ======= -->
+        <section id="testimonials">
+            <div class="testi-header reveal">
+                <p class="section-tag">Clientes</p>
+                <h2 class="section-title">LO QUE DICEN</h2>
+            </div>
+            <div class="testi-track" id="testi-track"></div>
+        </section>
+
+        <!-- ======= NEWSLETTER ======= -->
+        <section id="newsletter">
+            <div class="newsletter-inner reveal">
+                <p class="newsletter-tag">Únete</p>
+                <h2 class="newsletter-title">ÚNETE A<br>LA TRIBU</h2>
+                <p class="newsletter-incentive">Suscríbete y obtén <strong>10% de descuento</strong> en tu primer pedido</p>
+                <form class="newsletter-form" id="newsletter-form" novalidate>
+                    <input type="email" class="newsletter-input" id="nl-email" placeholder="Tu correo electrónico" autocomplete="email">
+                    <button type="submit" class="btn-sub">SUSCRIBIRSE</button>
+                </form>
+                <div class="newsletter-ok" id="nl-ok">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+                    <span>¡Gracias! Ya eres parte de la tribu Valkiria.</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======= FOOTER ======= -->
+        <footer>
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand-name">VALKIRIA</div>
+                    <div class="footer-brand-sub">Bikes</div>
+                    <p class="footer-tagline">Forjado para Rodar. Construido para Bolivia. Listo para el mundo.</p>
+                </div>
+                <div>
+                    <p class="footer-col-head">TIENDA</p>
+                    <div class="footer-links">
+                        <a href="#bikes">Bicicletas de Montaña</a>
+                        <a href="#bikes">Bicicletas de Ruta</a>
+                        <a href="#bikes">Bicicletas Urbanas</a>
+                        <a href="#bikes">Bicicletas Gravel</a>
+                        <a href="#gear">Cascos &amp; Equipamiento</a>
+                        <a href="#supplements">Suplementos</a>
+                    </div>
+                </div>
+                <div>
+                    <p class="footer-col-head">SÍGUENOS</p>
+                    <div class="social-list">
+                        <a href="TU_LINK_INSTAGRAM_AQUÍ" target="_blank" class="social-item">
+                            <div class="social-icon-box">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+            </svg>
+                            </div>
+                            <span>@valkiria.bikes</span>
+                        </a>
+                        <a href="TU_LINK_FACEBOOK_AQUÍ" target="_blank" class="social-item">
+                            <div class="social-icon-box">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+            </svg>
+                            </div>
+                            <span>Valkiria Bikes</span>
+                        </a>
+                        <a href="TU_LINK_TIKTOK_AQUÍ" target="_blank" class="social-item">
+                            <div class="social-icon-box">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 12a4 4 0 104 4V4a5 5 0 005 5"/>
+            </svg>
+                            </div>
+                            <span>@valkiriabikes</span>
+                        </a>
+                        <a href="TU_LINK_WHATSAPP_AQUÍ" target="_blank" class="social-item">
+                            <div class="social-icon-box">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 11.5a8.4 8.4 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.4 8.4 0 013.8-.9h.5a8.5 8.5 0 018 8v.5z"/>
+            </svg>
+                            </div>
+                            <span>WhatsApp</span>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <p class="footer-col-head">CONTACTO</p>
+                    <div class="contact-item">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+                        <span>Calle potosí #1779, Bolivia</span>
+                    </div>
+                    <div class="contact-item">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+                        <span>hola@valkiriabikes.bo</span>
+                    </div>
+                    <div class="contact-item">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07A19.5 19.5 0 013.07 9.5a19.8 19.8 0 01-3-8.57A2 2 0 012.18 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L6.91 9.91a16 16 0 006.72 6.72l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/>
+        </svg>
+                        <span>+591 77410154 - 64902607</span>
+                    </div>
+                    <div class="contact-item">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+                        <span>Lun&ndash;Sáb: 9:00&ndash;19:00</span>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copy">&copy; 2025 Valkiria Bikes &mdash; Cochabamba, Bolivia. Todos los derechos reservados.</p>
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        /* ============================================================
+                                                                                                                                                                                                                                                                                           DATA
+                                                                                                                                                                                                                                                                                        ============================================================ */
+        const CAT_ES = {
+            mountain: 'Montaña',
+            road: 'Ruta',
+            urban: 'Urbana',
+            gravel: 'Gravel'
+        };
+
+        const BIKES = [{
+            id: 'b1',
+            name: 'Canyon spectral CF 7',
+            cat: 'mountain',
+            priceBs: 'Bs. 14.500',
+            priceUsd: '1.450',
+            vis: 'bv1',
+            glow: '#c4a96b',
+            img: 'canyon_cf7.jpg'
+        }, {
+            id: 'b2',
+            name: 'Trek Marlin 7 gen 3',
+            cat: 'mountain',
+            priceBs: 'Bs. 11.800',
+            priceUsd: '$1.180',
+            vis: 'bv2',
+            glow: '#a06840',
+            img: 'trek_2.jpg'
+        }, {
+            id: 'b3',
+            name: 'Sunpeed Cheeta',
+            cat: 'road',
+            priceBs: 'Bs. 18.200',
+            priceUsd: '1.820',
+            vis: 'bv3',
+            glow: '#c4a96b',
+            img: 'SP_3.jpg'
+        }, {
+            id: 'b4',
+            name: 'Canyon grizl 7',
+            cat: 'road',
+            priceBs: 'Bs. 13.600',
+            priceUsd: '$1.970',
+            vis: 'bv4',
+            glow: '#8b4a4a',
+            img: 'griz1.png'
+        }, {
+            id: 'b5',
+            name: 'Cannondale flying v1',
+            cat: 'urban',
+            priceBs: 'Bs. 6.900',
+            priceUsd: '$1.000',
+            vis: 'bv5',
+            glow: '#8a9a6b',
+            img: 'c2.jpg'
+        }, {
+            id: 'b6',
+            name: 'Specialized s-works crux',
+            cat: 'gravel',
+            priceBs: 'Bs. 16.400',
+            priceUsd: '$2.380',
+            vis: 'bv6',
+            glow: '#b87040',
+            img: 's1.jpg'
+        }, ];
+        const GEAR = [{
+            id: 'g1',
+            name: 'Casco Fox',
+            cat: 'Casco',
+            priceBs: 'Bs. 890',
+            priceUsd: '$129',
+            vis: 'gv1',
+            img: 'cf.jpg'
+        }, {
+            id: 'g2',
+            name: 'Guantes Fox',
+            cat: 'Guantes',
+            priceBs: 'Bs. 320',
+            priceUsd: '$46',
+            vis: 'gv2',
+            img: 'gf2.jpg'
+        }, {
+            id: 'g3',
+            name: 'Millot Fox',
+            cat: 'Camiseta',
+            priceBs: 'Bs. 560',
+            priceUsd: '$81',
+            vis: 'gv3',
+            img: 'm1.jpg'
+        }, {
+            id: 'g4',
+            name: 'Pedales CarbonLite',
+            cat: 'Pedales',
+            priceBs: 'Bs. 680',
+            priceUsd: '$98',
+            vis: 'gv4',
+            img: 'p1.jpg'
+        }, {
+            id: 'g5',
+            name: 'Luces TrailBright',
+            cat: 'Iluminación',
+            priceBs: 'Bs. 290',
+            priceUsd: '$42',
+            vis: 'gv5',
+            img: 'l1.jpg'
+        }, {
+            id: 'g6',
+            name: 'Bolso de Sillín Apex',
+            cat: 'Bolso',
+            priceBs: 'Bs. 240',
+            priceUsd: '$35',
+            vis: 'gv6',
+            img: 'b2.jpg'
+        }, {
+            id: 'g7',
+            name: 'Zapatillas de Jackson Goldstone',
+            cat: 'Zapatillas',
+            priceBs: 'Bs. 1.100',
+            priceUsd: '$159',
+            vis: 'gv7',
+            img: 'z1.jpg'
+        }, {
+            id: 'g8',
+            name: 'Gafas Fox',
+            cat: 'Gafas',
+            priceBs: 'Bs. 480',
+            priceUsd: '$70',
+            vis: 'gv8',
+            img: 'g.jpg'
+        }, ];
+        const SUPPS = [{
+            id: 's1',
+            name: 'Pre-Entrenamiento Valkiria',
+            desc: 'Energía explosiva y concentración máxima para tus sesiones más exigentes.',
+            tags: ['Energía Total', 'Enfoque Mental', 'Sin Azúcar'],
+            priceBs: 'Bs. 280',
+            priceUsd: '$40',
+            vis: 'sv1',
+            img: 'pe.jpg'
+        }, {
+            id: 's2',
+            name: 'Geles de Energía',
+            desc: 'Carbohidratos de rápida absorción para recargar durante el pedaleo. Pack de 12.',
+            tags: ['Combustible Rápido', 'Resistencia', 'Portable'],
+            priceBs: 'Bs. 190',
+            priceUsd: '$27',
+            vis: 'sv2',
+            img: 'ge.jpg'
+        }, {
+            id: 's3',
+            name: 'ElectroBolt Bebida',
+            desc: 'Reposición completa de electrolitos. Mantente hidratado, mantente veloz.',
+            tags: ['Hidratación', 'Electrolitos', 'Anticalambre'],
+            priceBs: 'Bs. 165',
+            priceUsd: '$24',
+            vis: 'sv3',
+            img: 'el.jpg'
+        }, {
+            id: 's4',
+            name: 'Proteína Recovery',
+            desc: 'Recuperación y crecimiento muscular post-rodada. Sabor chocolate.',
+            tags: ['Recuperación', 'Proteína', 'Reparación Muscular'],
+            priceBs: 'Bs. 350',
+            priceUsd: '$51',
+            vis: 'sv4',
+            img: 'pr.jpg'
+        }, ];
+        const TESTIMONIALS = [{
+            name: 'Carlos Mamani',
+            city: 'Cochabamba',
+            product: 'Valkiria Cima 29',
+            stars: 5,
+            quote: 'La mejor inversión que hice para el trail. La Cima 29 maneja como si las piedras no existieran. Calidad de primer nivel.'
+        }, {
+            name: 'Gabriela Quispe',
+            city: 'La Paz',
+            product: 'Valkiria Viento CR',
+            stars: 5,
+            quote: 'Subí el Chearoco con la Viento y fue una experiencia increíble. La bici es rígida, rápida y pesa nada. 100% recomendada.'
+        }, {
+            name: 'Andrés Villanueva',
+            city: 'Santa Cruz',
+            product: 'Casco Aero Pro',
+            stars: 4,
+            quote: 'El casco tiene una ventilación brutal. Con la camiseta Valkiria parece que vas más rápido solo por cómo te ves. Gran marca.'
+        }, {
+            name: 'Pamela Torrico',
+            city: 'Cochabamba',
+            product: 'Pre-Entrenamiento Valkiria',
+            stars: 5,
+            quote: 'Los suplementos son de otro nivel. El Pre-Entrenamiento me da energía limpia sin crash. Ya no uso otra marca para mis sesiones.'
+        }, {
+            name: 'Marco Ledezma',
+            city: 'Oruro',
+            product: 'Valkiria Gravelo X',
+            stars: 5,
+            quote: 'La Gravelo X es brutal para rutas mixtas. Asfalto, tierra, ripio — la bici se adapta a todo. Valkiria sabe lo que hace.'
+        }, ];
+
+        const WISHLIST_SVG = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg>`;
+        const STAR_SVG = `<svg class="testi-star" viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+        const REMOVE_SVG = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+        const CART_EMPTY_SVG = `<svg viewBox="0 0 48 48" width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4L6 12v28a4 4 0 004 4h28a4 4 0 004-4V12l-6-8z"/><line x1="6" y1="12" x2="42" y2="12"/><path d="M32 20a8 8 0 01-16 0"/></svg>`;
+
+        /* ============================================================
+           CART
+        ============================================================ */
+        let cart = [];
+        try {
+            cart = JSON.parse(localStorage.getItem('vk_cart') || '[]');
+        } catch (e) {
+            cart = [];
+        }
+
+        function saveCart() {
+            try {
+                localStorage.setItem('vk_cart', JSON.stringify(cart));
+            } catch (e) {}
+        }
+
+        function cartCount() {
+            return cart.reduce((s, i) => s + i.qty, 0);
+        }
+
+        function cartTotal() {
+            return cart.reduce((s, item) => {
+                const n = parseFloat(String(item.priceBs).replace(/[^0-9]/g, ''));
+                return s + (isNaN(n) ? 0 : n * item.qty);
+            }, 0);
+        }
+
+        function addToCart(id) {
+            const product = [...BIKES, ...GEAR, ...SUPPS].find(p => p.id === id);
+            if (!product) return;
+            const existing = cart.find(i => i.id === id);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({...product,
+                    qty: 1
+                });
+            }
+            saveCart();
+            refreshCartUI();
+            animateCartBtn();
+        }
+
+        function removeItem(id) {
+            cart = cart.filter(i => i.id !== id);
+            saveCart();
+            refreshCartUI();
+        }
+
+        function changeQty(id, d) {
+            const item = cart.find(i => i.id === id);
+            if (!item) return;
+            item.qty += d;
+            if (item.qty <= 0) {
+                removeItem(id);
+                return;
+            }
+            saveCart();
+            refreshCartUI();
+        }
+
+        function animateCartBtn() {
+            const btn = document.getElementById('cart-btn');
+            btn.style.transform = 'scale(1.22)';
+            setTimeout(() => btn.style.transform = '', 200);
+        }
+
+        function refreshCartUI() {
+            const count = cartCount();
+            const badge = document.getElementById('cart-count');
+            badge.textContent = count;
+            badge.classList.toggle('visible', count > 0);
+            renderCartItems();
+        }
+
+        function renderCartItems() {
+            const wrap = document.getElementById('cart-items');
+            const footer = document.getElementById('cart-footer');
+            const totalEl = document.getElementById('cart-total');
+
+            if (cart.length === 0) {
+                wrap.innerHTML = `<div class="cart-empty">${CART_EMPTY_SVG}<span>Tu carrito está vacío</span></div>`;
+                footer.style.display = 'none';
+                return;
+            }
+
+            footer.style.display = 'block';
+            totalEl.textContent = 'Bs. ' + cartTotal().toLocaleString('es-BO');
+
+            wrap.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <div class="cart-item-vis">${item.name.charAt(0)}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price">${item.priceBs}</div>
+        <div class="cart-item-qty">
+          <button class="qty-btn" onclick="changeQty('${item.id}',-1)">&#8722;</button>
+          <span class="qty-num">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${item.id}',1)">&#43;</button>
+        </div>
+      </div>
+      <button class="cart-item-remove" onclick="removeItem('${item.id}')" aria-label="Eliminar">${REMOVE_SVG}</button>
+    </div>
+  `).join('');
+        }
+
+        /* ============================================================
+           RENDER
+        ============================================================ */
+        function renderBikes(filter) {
+            const list = filter && filter !== 'all' ? BIKES.filter(b => b.cat === filter) : BIKES;
+            document.getElementById('bikes-carousel').innerHTML = list.map(b => `
+    <div class="product-card">
+      <div class="product-img ${b.vis}" style="overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <img src="${b.img}" alt="${b.name}" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="bike-art" style="display:none; position:absolute; inset:0; align-items:center; justify-content:center;"><div class="bike-glow" style="background:${b.glow}"></div><span style="font-family:'Bebas Neue',sans-serif;font-size:13px;color:rgba(250,248,244,0.4);letter-spacing:0.1em;position:relative;z-index:1;">Coloca el nombre de la imagen:<br><strong style="color:var(--gold)">${b.img}</strong></span></div>
+        <div class="product-img-label">${CAT_ES[b.cat]}</div>
+        <button class="wishlist-btn" onclick="this.classList.toggle('wishlisted')" aria-label="Añadir a favoritos">${WISHLIST_SVG}</button>
+      </div>
+      <div class="product-info">
+        <div class="product-name">${b.name}</div>
+        <div class="product-cat-label">Bicicleta ${CAT_ES[b.cat]}</div>
+        <div class="product-price-row">
+          <span class="price-bs">${b.priceBs}</span>
+          <span class="price-usd">${b.priceUsd}</span>
+        </div>
+        <button class="btn-cart" onclick="addToCart('${b.id}')">AGREGAR AL CARRITO</button>
+      </div>
+    </div>
+  `).join('');
+        }
+
+        function renderGear() {
+            document.getElementById('gear-grid').innerHTML = GEAR.map((g, i) => `
+    <div class="product-card reveal" style="transition-delay:${(i % 4) * 0.08}s">
+      <div class="product-img ${g.vis}" style="overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <img src="${g.img}" alt="${g.name}" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div style="display:none; position:absolute; inset:0; flex-direction:column; align-items:center; justify-content:center; gap:6px;">
+          <span class="gear-letter">${g.cat.charAt(0)}</span>
+          <span style="font-size:11px;color:rgba(250,248,244,0.4);letter-spacing:0.08em;text-align:center;padding:0 12px;">Coloca el nombre de la imagen:<br><strong style="color:var(--gold)">${g.img}</strong></span>
+        </div>
+        <div class="product-img-label">${g.cat}</div>
+        <button class="wishlist-btn" onclick="this.classList.toggle('wishlisted')" aria-label="Añadir a favoritos">${WISHLIST_SVG}</button>
+      </div>
+      <div class="product-info">
+        <div class="product-name">${g.name}</div>
+        <div class="product-cat-label">${g.cat}</div>
+        <div class="product-price-row">
+          <span class="price-bs">${g.priceBs}</span>
+          <span class="price-usd">${g.priceUsd}</span>
+        </div>
+        <button class="btn-cart" onclick="addToCart('${g.id}')">AGREGAR AL CARRITO</button>
+      </div>
+    </div>
+  `).join('');
+        }
+
+        function renderSupps() {
+            document.getElementById('supp-grid').innerHTML = SUPPS.map((s, i) => `
+    <div class="supp-card reveal" style="transition-delay:${i * 0.1}s">
+      <div class="supp-img ${s.vis}" style="overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <img src="${s.img}" alt="${s.name}" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div style="display:none; position:absolute; inset:0; flex-direction:column; align-items:center; justify-content:center; gap:6px;">
+          <div class="supp-glow"></div>
+          <div class="supp-can"></div>
+          <span style="font-size:11px;color:rgba(250,248,244,0.4);letter-spacing:0.08em;text-align:center;padding:0 12px;position:relative;z-index:1;">Coloca el nombre de la imagen:<br><strong style="color:var(--gold)">${s.img}</strong></span>
+        </div>
+      </div>
+      <div class="supp-info">
+        <div class="supp-tags">${s.tags.map(t => `<span class="supp-tag">${t}</span>`).join('')}</div>
+        <div class="supp-name">${s.name}</div>
+        <p class="supp-desc">${s.desc}</p>
+        <div class="product-price-row">
+          <span class="price-bs">${s.priceBs}</span>
+          <span class="price-usd">${s.priceUsd}</span>
+        </div>
+        <button class="btn-cart-elec" onclick="addToCart('${s.id}')">AGREGAR AL CARRITO</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderTestimonials() {
+  document.getElementById('testi-track').innerHTML = TESTIMONIALS.map(t => `
+    <div class="testi-card">
+      <div class="testi-stars">${STAR_SVG.repeat(t.stars)}</div>
+      <p class="testi-quote">&ldquo;${t.quote}&rdquo;</p>
+      <div class="testi-author">
+        <div class="testi-avatar">${t.name.charAt(0)}</div>
+        <div>
+          <div class="testi-name">${t.name}</div>
+          <div class="testi-city">${t.city}</div>
+          <span class="testi-prod">${t.product}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ============================================================
+   CAROUSEL DRAG
+============================================================ */
+function initDrag(el) {
+  let down = false, startX, scrollLeft;
+  el.addEventListener('mousedown', e => {
+    down = true; el.classList.add('dragging');
+    startX = e.pageX - el.offsetLeft; scrollLeft = el.scrollLeft;
+  });
+  el.addEventListener('mouseleave', () => { down = false; el.classList.remove('dragging'); });
+  el.addEventListener('mouseup',    () => { down = false; el.classList.remove('dragging'); });
+  el.addEventListener('mousemove',  e => {
+    if (!down) return; e.preventDefault();
+    el.scrollLeft = scrollLeft - (e.pageX - el.offsetLeft - startX) * 1.5;
+  });
+  let ts, tsl;
+  el.addEventListener('touchstart', e => { ts = e.touches[0].clientX; tsl = el.scrollLeft; }, { passive: true });
+  el.addEventListener('touchmove',  e => { if (ts == null) return; el.scrollLeft = tsl - (e.touches[0].clientX - ts) * 1.4; }, { passive: true });
+}
+
+/* ============================================================
+   TESTI AUTO-SCROLL
+============================================================ */
+function initTestiScroll() {
+  const track = document.getElementById('testi-track');
+  let paused = false;
+  track.addEventListener('mouseenter', () => paused = true);
+  track.addEventListener('mouseleave', () => paused = false);
+  setInterval(() => {
+    if (paused) return;
+    if (track.scrollLeft >= track.scrollWidth - track.clientWidth - 5) {
+      track.scrollLeft = 0;
+    } else {
+      track.scrollLeft += 1;
+    }
+  }, 22);
+}
+
+/* ============================================================
+   INTERSECTION OBSERVER
+============================================================ */
+function initReveal() {
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+}
+
+/* ============================================================
+   NAV + BACK TO TOP SCROLL
+============================================================ */
+function initNav() {
+  const nav = document.getElementById('nav');
+  const btt = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+    btt.classList.toggle('visible', window.scrollY > 300);
+  }, { passive: true });
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+}
+
+/* ============================================================
+   MOBILE MENU
+============================================================ */
+function initMobileMenu() {
+  const burger = document.getElementById('hamburger');
+  const menu = document.getElementById('mobile-menu');
+  const toggle = () => {
+    burger.classList.toggle('open');
+    menu.classList.toggle('open');
+    document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+  };
+  burger.addEventListener('click', toggle);
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    burger.classList.remove('open');
+    menu.classList.remove('open');
+    document.body.style.overflow = '';
+  }));
+}
+
+/* ============================================================
+   CART
+============================================================ */
+function initCart() {
+  const sidebar = document.getElementById('cart-sidebar');
+  const overlay = document.getElementById('cart-overlay');
+  const openCart  = () => { sidebar.classList.add('open'); overlay.classList.add('show'); document.body.style.overflow = 'hidden'; };
+  const closeCart = () => { sidebar.classList.remove('open'); overlay.classList.remove('show'); document.body.style.overflow = ''; };
+
+  document.getElementById('cart-btn').addEventListener('click', openCart);
+  document.getElementById('cart-close').addEventListener('click', closeCart);
+  overlay.addEventListener('click', closeCart);
+
+  document.getElementById('checkout-btn').addEventListener('click', () => {
+    closeCart();
+    setTimeout(() => document.getElementById('checkout-modal').classList.add('show'), 350);
+  });
+
+  const modal = document.getElementById('checkout-modal');
+  document.getElementById('modal-close').addEventListener('click', () => {
+    modal.classList.remove('show');
+    cart = []; saveCart(); refreshCartUI();
+  });
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('show'); });
+}
+
+/* ============================================================
+   FILTERS
+============================================================ */
+function initFilters() {
+  document.getElementById('bike-filters').addEventListener('click', e => {
+    const tab = e.target.closest('.filter-tab');
+    if (!tab) return;
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderBikes(tab.dataset.filter);
+    initDrag(document.getElementById('bikes-carousel'));
+  });
+}
+
+/* ============================================================
+   NEWSLETTER
+============================================================ */
+function initNewsletter() {
+  const form  = document.getElementById('newsletter-form');
+  const input = document.getElementById('nl-email');
+  const ok    = document.getElementById('nl-ok');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());
+    input.classList.toggle('err', !valid);
+    if (valid) { form.style.display = 'none'; ok.classList.add('show'); }
+  });
+  input.addEventListener('input', () => input.classList.remove('err'));
+}
+
+/* ============================================================
+   PARALLAX
+============================================================ */
+function initParallax() {
+  const bg = document.getElementById('hero-bg');
+  document.addEventListener('mousemove', e => {
+    const x = (e.clientX / window.innerWidth  - 0.5) * 18;
+    const y = (e.clientY / window.innerHeight - 0.5) * 18;
+    bg.style.transform = `translate(${x}px, ${y}px)`;
+  }, { passive: true });
+}
+
+/* ============================================================
+   LOADING
+============================================================ */
+function initLoading() {
+  const el = document.getElementById('loading');
+  const hide = () => el.classList.add('hidden');
+  window.addEventListener('load', () => setTimeout(hide, 800));
+  setTimeout(hide, 1600);
+}
+
+/* ============================================================
+   BOOT
+============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  initLoading();
+  renderBikes('all');
+  renderGear();
+  renderSupps();
+  renderTestimonials();
+  refreshCartUI();
+  initNav();
+  initMobileMenu();
+  initCart();
+  initFilters();
+  initNewsletter();
+  initParallax();
+  initDrag(document.getElementById('bikes-carousel'));
+  initReveal();
+  setTimeout(initTestiScroll, 600);
+});
+    </script>
+</body>
+
+</html><!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valkiria Bikes — Forjado para Rodar</title>
+    <link rel="icon" type="image/png" href="logo3.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap');
         /* === VARIABLES === */
