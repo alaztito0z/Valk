@@ -1,0 +1,19 @@
+{
+    "name": "Valkiria Bikes",
+    "short_name": "Valkiria",
+    "icons": [{
+            "src": "logo3.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "logo3.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#0e0d0b",
+    "theme_color": "#c4a96b"
+}
